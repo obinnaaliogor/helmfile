@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: webapp-ingress-rule
+  namespace: dev
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: app.wiz-obi.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: springapp-demochart2
+            port:
+              number: 8080
+  - host: obinna.wiz-obi.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: springapp-demochart2
+            port:
+              number: 8080
