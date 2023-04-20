@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: java
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: javawebapp
+  template:
+    metadata:
+      name: javawebapp
+      labels:
+        app: javawebapp
+    spec:
+      #nodeSelector:
+        #node: dbnode
+      containers:
+      - name: javawebapp
+        image: mylandmarktech/java-web-app
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: 50m
+            memory: 256Mi
+          limits:
+            cpu: 50m
+            memory: 256Mi
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: webappsvc
+spec:
+  type: NodePort
+  ports:
+  - targetPort: 8080
+    port: 80
+  selector:
+    app: javawebapp
