@@ -17,7 +17,7 @@ spec:
         #node: dbnode
       containers:
       - name: javawebapp
-        image: mylandmarktech/java-web-app
+        image: obinnaaliogor/java-web-app:5
         ports:
         - containerPort: 8080
         resources:
