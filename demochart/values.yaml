@@ -5,10 +5,10 @@
 replicaCount: 3
 
 image:
-  repository: obinnaaliogor/maven-web-app
+  repository: obinnaaliogor/hello-world
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "1"
+  tag: ""
 
 imagePullSecrets: []
 nameOverride: ""
@@ -47,9 +47,9 @@ ingress:
     #kubernetes.io/ingress.class: nginx # This cannot be set when the className is already set
     #kubernetes.io/tls-acme: "true"
   hosts:
-    - host: maven.wiz-obi.com
+    - host: hello.wiz-obi.com
       paths:
-        - path: /
+        - path: /webapp
           pathType: ImplementationSpecific
   tls: []
   #  - secretName: chart-example-tls

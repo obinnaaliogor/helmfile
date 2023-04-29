@@ -1,11 +1,15 @@
 repositories:
 - name: prometheus
   url: https://prometheus-community.github.io/helm-charts
+- name: grafana
+  url: https://romanow.github.io/helm-charts/ #grafana repo url
 - name: ingress-nginx
   url: https://kubernetes.github.io/ingress-nginx
 - name: elasticsearch #Repo Name
-  url: https://helm.elastic.co
+  url: https://helm.elastic.co #ELK/FILEBEAT/KIBANA
 - name: kibana
+  url: https://helm.elastic.co
+- name: filebeat
   url: https://helm.elastic.co
 releases:
 - name: springapp
@@ -16,32 +20,51 @@ releases:
   - name: replicaCount
     value: "2"
   installed: true
-- name: maven-web-app
+#Access this spring app using, http://app.wiz-obi.com/
+- name: hello-world
   namespace: prod
   chart: ./demochart
-  version: 0.2.0
+  version: 0.1.0
   set:
   - name: replicaCount  #This replicaCount will override that of the values.yml file
-    value: "10"
+    value: "5"
   installed: true
+  #Access this hello-world app using http://app.wiz-obi.com/
   #values:
   #- values.yaml you can add a custom value file and rference it
   #value: "3"
    # - name: service.port
       #value: "8080"
+ #HERE I AM DEPLOYING prometheus and grafana 2 DIFF TOOL.
+#Prometheus has 3 major component, nodeexporter --> ds, prometheus server--> deply but needs pv and alertmanager --> sts
 - name: prometheus
   namespace: apm
   chart: prometheus/prometheus
   installed: true
+ #Grafana is the dashboard to visualize the metrics
+- name: grafana
+  namespace: apm
+  chart: grafana/grafana
+  installed: true
+#INGRESS CONTROLLER TO CONNECT THESE TOOLS AND EXPOSE IT TO ENDUSERS
 - name: ingress-nginx  #This is a third party app for traffic
   namespace: ingress-nginx
   chart: ingress-nginx/ingress-nginx
   installed: true
-- name: elasticsearch  #This will be the release name
-  namespace: elasticsearch
+  #HERE I AM DEPLOYING ELASTICSTACK 3 DIFF TOOL FOR LOG COLLECTION AND ANALYTICS, elasticsearch,filebeat and kibana.
+  # filebeat will be deployed as ds b/c it will collect the logs from all the nodes in the cluster and ships it to elasticsearch which is deployed as sts and acts as
+  #a container that will hold and index the logs. Kibana will be used as a dashboard to visualize the logs collect by filebeat.
+  #Kibana datasource is elasticsearch.
+- name: elasticsearch  #This will be the release name 1.
+  namespace: efk
   chart: elasticsearch/elasticsearch #chartName
   installed: true
-- name: kibana  #This will be the release name
-  namespace: elasticsearch
+- name: filebeat  #This will be the release name
+  namespace: efk
+  chart: filebeat/filebeat  #chartName  2.
+  installed: true
+- name: kibana  #This will be the release name 3.
+  namespace: efk
   chart: kibana/kibana  #chartName
   installed: true
+  #I will setup an ingress rule for elastic stack and prometheus and grafana.
