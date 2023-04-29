@@ -41,9 +41,9 @@ service:
   port: 8080 #This servers as both service and containerPort or targetport
 
 ingress:
-  enabled: false
-  className: ""
-  annotations: {}
+  enabled: true
+  className: "nginx"
+  annotations: {} #Remove the bracket if you intend to use the annotations, no need of annotations if you are using ClassName
     #kubernetes.io/ingress.class: nginx
     #kubernetes.io/tls-acme: "true"
   hosts:

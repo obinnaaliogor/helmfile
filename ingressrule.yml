@@ -1,28 +1,75 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: webapp-ingress-rule
-  namespace: dev
+  name: prometheus-server-ingress-rule
+  namespace: apm
 spec:
   ingressClassName: nginx
   rules:
-  - host: app.wiz-obi.com
+  - host: prometheus.wiz-obi.com
     http:
       paths:
       - pathType: Prefix
         path: "/"
         backend:
           service:
-            name: springapp-demochart2
+            name: prometheus-server
             port:
-              number: 8080
-  - host: obinna.wiz-obi.com
+              number: 80
+---
+ apiVersion: networking.k8s.io/v1
+ kind: Ingress
+ metadata:
+   name: grafana-ingress-rule
+   namespace: apm
+ spec:
+   ingressClassName: nginx
+   rules:
+   - host: grafana.wiz-obi.com
+     http:
+       paths:
+       - pathType: Prefix
+         path: "/"
+         backend:
+           service:
+             name: grafana
+             port:
+               number: 3000
+---
+  apiVersion: networking.k8s.io/v1
+  kind: Ingress
+  metadata:
+    name: alertmanager-ingress-rule
+    namespace: apm
+  spec:
+    ingressClassName: nginx
+    rules:
+    - host: alertmanager.wiz-obi.com
+      http:
+        paths:
+        - pathType: Prefix
+          path: "/"
+          backend:
+            service:
+              name: prometheus-alertmanager
+              port:
+                number: 9093
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: efk-ingress-rule
+  namespace: efk
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: kibana.wiz-obi.com
     http:
       paths:
       - pathType: Prefix
         path: "/"
         backend:
           service:
-            name: springapp-demochart2
+            name: kibana-kibana
             port:
-              number: 8080
+              number: 5601
