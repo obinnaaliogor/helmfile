@@ -1,9 +1,12 @@
 repositories:
-#- name: prometheus
- # url: https://prometheus-community.github.io/helm-charts
+- name: prometheus
+  url: https://prometheus-community.github.io/helm-charts
 - name: ingress-nginx
   url: https://kubernetes.github.io/ingress-nginx
-
+- name: elasticsearch #Repo Name
+  url: https://helm.elastic.co
+- name: kibana
+  url: https://helm.elastic.co
 releases:
 - name: springapp
   namespace: dev
@@ -26,11 +29,19 @@ releases:
   #value: "3"
    # - name: service.port
       #value: "8080"
-#- name: prometheus
- # namespace: apm
- # chart: prometheus/prometheus
- # installed: false
+- name: prometheus
+  namespace: apm
+  chart: prometheus/prometheus
+  installed: true
 - name: ingress-nginx  #This is a third party app for traffic
   namespace: ingress-nginx
   chart: ingress-nginx/ingress-nginx
-  #installed: true
+  installed: true
+- name: elasticsearch  #This will be the release name
+  namespace: elasticsearch
+  chart: elasticsearch/elasticsearch #chartName
+  installed: true
+- name: kibana  #This will be the release name
+  namespace: elasticsearch
+  chart: kibana/kibana  #chartName
+  installed: true
